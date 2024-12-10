@@ -1,5 +1,10 @@
 ---
 theme: jekyll-theme-cayman
 
+name: "Spirit Tutorial: DPG Spring Meeting 2025"
+description: >
+  Spirit tutorial for the DPG spring meeting
+  on March 16, 2025 in Regensburg
+
 github:
   is_project_page: false
