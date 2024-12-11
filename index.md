@@ -1,6 +1,6 @@
 # Spirit Tutorial: DPG Spring Meeting 2025
 
-Location: …
+Location: *TBD*
 
 ## Preparation
 - Bring a charged laptop.
