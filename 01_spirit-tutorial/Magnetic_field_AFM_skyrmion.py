@@ -122,7 +122,7 @@ def get_profile(positions_new, spins_new, positions, spins, output_file, cutoff_
     return profile, radius, popt
 
 # Simulation setup
-cfgfile = "input2.cfg"
+cfgfile = "input_AFM_skyrmion.cfg"
 quiet = True
 
 B_values = np.arange(0.00, 30, 5)  # Changing applied B from 0 to 30 at step 5
@@ -130,7 +130,7 @@ radii = []
 
 for B in B_values:
     with state.State(cfgfile, quiet) as p_state:
-        io.image_read(p_state, "Neel.ovf")
+        io.image_read(p_state, "AFM_skyrmion.ovf")
         hamiltonian.set_field(p_state, B, [0, 0, 1], idx_image=-1, idx_chain=-1)
         simulation.start(p_state, simulation.METHOD_LLG, simulation.SOLVER_LBFGS_OSO)
         system.update_data(p_state)
