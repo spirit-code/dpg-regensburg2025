@@ -79,3 +79,40 @@ def get_profile(positions, spins, output_file, cutoff_center=0, cutoff_ring=0.33
 
     plot_spin_configuration(positions, spins, f"FM_skyrmion_{output_file}.png", f"Skyrmion Profile ( {output_file})\nRadius = {radius:.1f} Angs.")
     return profile, radius, popt
+# Simulation setup
+cfgfile = "input_FM_skyrmion.cfg"
+quiet = True
+B_values = np.arange(0.00, 2.4, 0.2)
+radii = []
+
+for B in B_values:
+    with state.State(cfgfile, quiet) as p_state:
+        io.image_read(p_state, "FM_skyrmion.ovf")
+        hamiltonian.set_field(p_state, B, [0, 0, 1], idx_image=-1, idx_chain=-1)
+        simulation.start(p_state, simulation.METHOD_LLG, simulation.SOLVER_LBFGS_OSO)
+        system.update_data(p_state)
+        spin_file = f"spins_B{B:.2f}.ovf"
+        io.image_write(p_state, spin_file)
+        positions = geometry.get_positions(p_state)
+        spins = np.loadtxt(spin_file)
+        
+        profile, radius, popt = get_profile(positions, spins, f"B{B:.2f}")
+        radii.append(radius)
+
+# Filter out zero radius values before plotting
+valid_B_values = []
+valid_radii = []
+
+for B, radius in zip(B_values, radii):
+    if radius > 0:  # Exclude zero radius values
+        valid_B_values.append(B)
+        valid_radii.append(radius)
+
+# Plot radius vs B value only for nonzero radii
+plt.figure(figsize=(10, 6))
+plt.plot(valid_B_values, valid_radii, marker='o')
+plt.title('FM skyrmion radius vs magnetic field strength')
+plt.xlabel('B (meV)')
+plt.ylabel('Radius ($\AA$)')
+plt.grid()
+plt.savefig('radius_vs_B.png')
