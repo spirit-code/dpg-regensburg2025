@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 import math
 from scipy.optimize import curve_fit
 
-# Spirit modules directory
-spirit_py_dir = "/Users/aldara/Desktop/work/spirit_GNEB/core/python"
-sys.path.insert(0, spirit_py_dir)
 
 # Import Spirit modules
 from spirit import state, configuration, simulation, geometry, system, io, parameters
