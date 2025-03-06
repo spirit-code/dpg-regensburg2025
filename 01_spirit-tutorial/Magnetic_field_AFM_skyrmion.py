@@ -4,10 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-# Spirit module setup
-spirit_py_dir = "/Users/aldara/Desktop/work/spirit/core/python"  # Adjust path as needed
-sys.path.insert(0, spirit_py_dir)
-
+# Import Spirit module 
 from spirit import state, configuration, simulation, geometry, system, hamiltonian, io
 
 def custom_color_map(spins, threshold=0.999):
@@ -125,7 +122,7 @@ def get_profile(positions_new, spins_new, positions, spins, output_file, cutoff_
     return profile, radius, popt
 
 # Simulation setup
-cfgfile = "square_Neel.cfg"
+cfgfile = "input2.cfg"
 quiet = True
 
 B_values = np.arange(0.00, 30, 5)  # Changing applied B from 0 to 30 at step 5
