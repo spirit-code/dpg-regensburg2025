@@ -72,7 +72,7 @@ def get_center(positions, spins, center_up=None, cutoff_center=0):
     return np.mean(positions_center, axis=0)
 
 # Configuration file
-cfgfile = "./input1.cfg"
+cfgfile = "./input_FM_skyrmion.cfg"
 n_iterations = 5000  # Total number of simulation steps
 n_itertions_step = 1000  # Steps per iteration
 
@@ -80,7 +80,7 @@ total = []
 quiet = True
 
 with state.State(cfgfile, quiet) as p_state:
-    io.image_read(p_state, "Bloch.ovf")
+    io.image_read(p_state, "FM_skyrmion.ovf")
     system.update_data(p_state)
     alpha=0.2 #alpha value
     u=3 #current density related parameter
