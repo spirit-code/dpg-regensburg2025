@@ -1,12 +1,7 @@
-import os
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
-import math
-from scipy.optimize import curve_fit
 
-# Import Spirit modules
-from spirit import state, configuration, simulation, geometry, system, io, parameters
+from spirit import geometry, system
 
 def sublattice(p_state, spins_file, positions_file):
     spins = system.get_spin_directions(p_state)
