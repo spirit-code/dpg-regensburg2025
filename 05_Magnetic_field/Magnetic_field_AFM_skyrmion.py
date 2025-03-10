@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-# Import Spirit module 
+# Import Spirit module
 from spirit import state, configuration, simulation, geometry, system, hamiltonian, io
 
 def custom_color_map(spins, threshold=0.999):
@@ -26,28 +26,28 @@ def custom_color_map(spins, threshold=0.999):
 def plot_spin_configuration(positions, spins, output_file, title, message=None):
     """Plots spin configuration with a white background and no box around the plot."""
     fig, ax = plt.subplots(figsize=(8, 8), facecolor="white")  # Set background to white
-    
+
     # Generate custom color map for spins
     colors = custom_color_map(spins)
-    
+
     # Plot spin vectors
     ax.quiver(
-        positions[:, 0], positions[:, 1], spins[:, 0], spins[:, 1], 
+        positions[:, 0], positions[:, 1], spins[:, 0], spins[:, 1],
         color=plt.cm.jet(colors), pivot="middle", scale=50, scale_units="xy", width=0.005
     )
-    
+
     # Remove the box (spines)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
     ax.spines['left'].set_visible(False)
-    
+
     # Remove ticks, labels, and the grid
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_xticklabels([])
     ax.set_yticklabels([])
-    
+
     # Turn off axis completely
     plt.axis('off')
 
@@ -61,14 +61,14 @@ def plot_spin_configuration(positions, spins, output_file, title, message=None):
     # Save with white background
     plt.savefig(output_file, bbox_inches='tight', facecolor="white", dpi=300)
     plt.close(fig)
-    
+
     print(f"Plot saved: {output_file}")
 
 def normalize_spins(spins, threshold=0.999):
     """Normalize spins but keep original values for visualization and threshold values."""
     norms = np.linalg.norm(spins, axis=1, keepdims=True)
     max_norm = np.max(norms)
-    
+
     scaled_spins = spins / max_norm  # Normalize spins
     scaled_spins[np.abs(scaled_spins) > threshold] = np.sign(scaled_spins[np.abs(scaled_spins) > threshold])  
 
@@ -120,55 +120,3 @@ def get_profile(positions_new, spins_new, positions, spins, output_file, cutoff_
     plot_spin_configuration(positions, spins, f"AFM_skyrmion_{output_file}.png",
                             f"Skyrmion Profile ({output_file} meV)\nRadius = {radius:.1f} $\AA$")
     return profile, radius, popt
-
-# Simulation setup
-cfgfile = "input_AFM_skyrmion.cfg"
-quiet = True
-
-B_values = np.arange(0.00, 30, 5)  # Changing applied B from 0 to 30 at step 5
-radii = []
-
-for B in B_values:
-    with state.State(cfgfile, quiet) as p_state:
-        io.image_read(p_state, "AFM_skyrmion.ovf")
-        hamiltonian.set_field(p_state, B, [0, 0, 1], idx_image=-1, idx_chain=-1)
-        simulation.start(p_state, simulation.METHOD_LLG, simulation.SOLVER_LBFGS_OSO)
-        system.update_data(p_state)
-
-        # Get original spins and positions
-        spins = system.get_spin_directions(p_state)
-        positions = geometry.get_positions(p_state)
-
-        # Initialize new lists
-        spins_new = []
-        positions_new = []
-
-        # Get lattice structure
-        n_cells = geometry.get_n_cells(p_state)     # number of cells in Bravais lattice
-        n_cell_atoms = geometry.get_n_cell_atoms(p_state)  # number of basis atoms per unit cell
-
-        # Filter spins and positions
-        for c in range(n_cells[2]):
-            for b in range(n_cells[1]):
-                for a in range(n_cells[0]):
-                    for i in range(n_cell_atoms):
-                        sublattice = (a % 2)
-                        sublattice_2 = (b % 2)
-                        if sublattice_2 == sublattice:
-                            idx = i + n_cell_atoms * (a + n_cells[0] * (b + n_cells[1] * c))
-                            spins_new.append(spins[idx])
-                            positions_new.append(positions[idx])
-
-        # Convert to numpy arrays
-        spins_new = np.array(spins_new)
-        positions_new = np.array(positions_new)
-
-        # Save to files (optional, for debugging)
-        np.savetxt(f"spins_B{B:.2f}.txt", spins_new)
-        # np.savetxt(f"positions_B{B:.2f}.txt", positions_new)
-
-        # Compute profile and radius using filtered spins/positions
-        profile, radius, popt = get_profile(positions_new, spins_new, positions, spins, f"B{B:.2f}")
-
-        # Store radius value
-        radii.append(radius)
