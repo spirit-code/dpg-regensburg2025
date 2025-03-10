@@ -118,5 +118,5 @@ def get_profile(positions_new, spins_new, positions, spins, output_file, cutoff_
         radius = popt[0]
 
     plot_spin_configuration(positions, spins, f"AFM_skyrmion_{output_file}.png",
-                            f"Skyrmion Profile ({output_file} meV)\nRadius = {radius:.1f} $\AA$")
+                            f"Skyrmion Profile ({output_file} meV)\nRadius = {radius:.1f} $Å$")
     return profile, radius, popt

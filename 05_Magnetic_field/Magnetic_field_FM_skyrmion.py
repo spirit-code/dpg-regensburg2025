@@ -77,5 +77,5 @@ def get_profile(positions, spins, output_file, cutoff_center=0, cutoff_ring=0.33
         popt, _ = curve_fit(mz_fun, profile[:, 0][ring_mask], profile[:, 3][ring_mask], p0=[radius, 1])
         radius = popt[0]
 
-    plot_spin_configuration(positions, spins, f"FM_skyrmion_{output_file}.png", f"Skyrmion Profile ( {output_file})\nRadius = {radius:.1f} Angs.")
+    plot_spin_configuration(positions, spins, f"FM_skyrmion_{output_file}.png", f"Skyrmion Profile ( {output_file})\nRadius = {radius:.1f} Å")
     return profile, radius, popt
