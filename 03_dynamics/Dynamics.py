@@ -42,19 +42,19 @@ def custom_color_map(spins, threshold=0.999):
 
 def plot_spin_configuration(positions, spins, output_file, title, message=None):
     """Plots spin configuration and ensures output is always generated."""
-    plt.figure(figsize=(8, 8))
+    fig, ax = plt.subplots(1, 1, figsize=(8, 8))
 
     colors = custom_color_map(spins)  # Get custom colors based on spins
 
-    plt.quiver(positions[:, 0], positions[:, 1], spins[:, 0], spins[:, 1], 
-               color=plt.cm.seismic(colors), pivot="middle", scale=50, scale_units="xy", width=0.005)
+    ax.quiver(positions[:, 0], positions[:, 1], spins[:, 0], spins[:, 1],
+              color=plt.cm.seismic(colors), pivot="middle", scale=50, scale_units="xy", width=0.005)
 
-    plt.title(title)
+    ax.set_title(title)
     if message:
         plt.text(0.5, 1.05, message, fontsize=12, ha='center', transform=plt.gca().transAxes)
 
-    plt.savefig(output_file)
-    plt.close()
+    fig.savefig(output_file)
+    plt.close(fig)
     print(f"Plot saved: {output_file}")
 
 def get_center(positions, spins, center_up=None, cutoff_center=0):
