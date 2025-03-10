@@ -60,8 +60,10 @@ def get_profile(positions, spins, output_file, cutoff_center=0, cutoff_ring=0.33
     profile[:, 0] = rho
     profile[:, 1:4] = spins
     direction_vectors = positions - center
-    norms = np.linalg.norm(direction_vectors, axis=1, keepdims=True)
-    normalized_directions = direction_vectors / norms
+    norms = np.linalg.norm(direction_vectors, axis=1)
+    mask = norms > 0
+    normalized_directions = np.zeros_like(direction_vectors)
+    normalized_directions[mask] = direction_vectors[mask] / norms[mask, None]
     profile[:, 4] = np.sum(spins * normalized_directions, axis=1)
     profile = profile[np.argsort(profile[:, 0])]
     ring_mask = np.abs(profile[:, 3]) < cutoff_ring

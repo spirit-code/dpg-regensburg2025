@@ -98,8 +98,10 @@ def get_profile(positions_new, spins_new, positions, spins, output_file, cutoff_
     profile[:, 1:4] = spins_new
 
     direction_vectors = positions_new - center
-    norms = np.linalg.norm(direction_vectors, axis=1, keepdims=True)
-    normalized_directions = direction_vectors / norms
+    norms = np.linalg.norm(direction_vectors, axis=1)
+    mask = norms > 0
+    normalized_directions = np.zeros_like(direction_vectors)
+    normalized_directions[mask] = direction_vectors[mask] / norms[mask, None]
 
     profile[:, 4] = np.sum(spins_new * normalized_directions, axis=1)
 
