@@ -17,3 +17,8 @@ Time: *17:30-18:15*
 - influence of a magnetic field on the FM and AFM skyrmion radius
 - current driven skyrmion dynamics and skyrmion Hall angle
 - Monte Carlo method to characterize Curie temperature and anisotropy energy
+
+## Additional Information
+The tutorial is preceded by two lectures deriving the Atomistic Spin-Hamiltonian and how it connects to DFT results:
+- *16:00–16:45* Derivation of the spin-lattice Hamiltonian - Hiroshi Katsumoto
+- *16:45–17:30* Computing magnetic exchange interactions using DFT - Manuel dos Santos Dias
